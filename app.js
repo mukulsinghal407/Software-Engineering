@@ -3,7 +3,7 @@ const app = express();
 app.use(express.json());
 
 app.get('/',(req,res)=>{
-    res.status(200).json({'Welcome to Laundri API zombie endpoint'});
+    res.status(200).json({message:'Welcome to Laundri API zombie endpoint'});
 });
 
 const port = process.env.PORT || 8000;
