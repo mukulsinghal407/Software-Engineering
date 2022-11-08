@@ -1,4 +1,11 @@
 const express = require('express');
+const mongoose = require('mongoose');
+
+mongoose.connect("mongodb+srv://admin-mukul:Test123@cluster0.vwhb9kr.mongodb.net/Laundri",{
+    useUnifiedTopology: true,
+    useNewUrlParser: true,
+});
+
 const app = express();
 app.use(express.json());
 
