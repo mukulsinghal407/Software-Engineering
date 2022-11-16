@@ -170,6 +170,8 @@ app.get("/userDetails/user_id=:user_id", (req, res) => {
 
 app.post("/login", (req, res) => {
   const user = req.body;
+  user.password = user.password.trim();
+  user.phone_no = user.phone_no.trim();
   User.findOne(user, (err, result) => {
     if (err) {
       res.status(400).json({ error: "Database connection failure" });
