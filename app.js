@@ -1,5 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const bodyParser = require("body-parser");
 
 // const jwt = require("jsonwebtoken");
 
@@ -81,7 +82,7 @@ const Order = mongoose.model("orders", order);
 const Slot = mongoose.model("slot", slot);
 
 const app = express();
-app.use(express.json());
+app.use(bodyParser.json());
 
 //GET Requests
 app.get("/", (req, res) => {
