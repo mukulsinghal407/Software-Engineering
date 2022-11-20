@@ -92,7 +92,7 @@ app.get("/", (req, res) => {
 app.get("/slot", (req, res) => {
   Slot.find({}, (err, result) => {
     if (err) {
-      res.status(400).json({ error: "The slots are unavailable" });
+      res.status(404).json({ error: "The slots are unavailable",status:404 });
     } else {
       var temp = [];
       result.forEach((element) => {
@@ -104,8 +104,8 @@ app.get("/slot", (req, res) => {
       temp.length === 0
         ? res
             .status(200)
-            .json({ message: "There are no available slots", slots: temp })
-        : res.status(200).json({ message: "The available slots", slots: temp });
+            .json({ message: "There are no available slots", slots: temp,status:200})
+        : res.status(200).json({ message: "The available slots", slots: temp,status:200 });
     }
   });
 });
@@ -115,13 +115,13 @@ app.get("/orderHistory/user_id=:user_id", (req, res) => {
     if (error) {
       res
         .status(401)
-        .json({ error: "There was a connection error with the database." });
+        .json({ error: "There was a connection error with the database.",status:401});
     } else if (result?.length === 0) {
-      res.status(200).json({ error: "No records found." });
+      res.status(200).json({ error: "No records found." ,results:[],status:200});
     } else {
       res
         .status(200)
-        .json({ message: "History of the orders", results: result });
+        .json({ message: "History of the orders", results: result,status:200 });
     }
   });
 });
@@ -130,11 +130,11 @@ app.get("/orderDetails/user_id=:user_id", (req, res) => {
   const user_id = req.params.user_id;
   Order.find({ user_id }, (err, result) => {
     if (err) {
-      res.status(400).json({ error: "The order was not found" });
+      res.status(404).json({ error: "The order was not found",status:404 });
     } else if (result?.length === 0) {
-      res.status(200).json({ message: "No orders found." });
+      res.status(200).json({ message: "No orders found." ,status:200});
     } else {
-      res.status(200).json({ message: "Successful", info: result });
+      res.status(200).json({ message: "Successful", info: result,status:200 });
     }
   });
 });
@@ -143,15 +143,16 @@ app.get("/userDetails/user_id=:user_id", (req, res) => {
   const user_id = req.params.user_id;
   User.findById(user_id, (err, result) => {
     if (err) {
-      res.status(400).json({ error: "Database connection issue" });
+      res.status(404).json({ error: "Database connection issue",status:404 });
     } else if (result == null) {
       res.status(401).json({
         message: "The user with the defined credentials wasn't found",
+        status:401
       });
     } else {
       res
         .status(200)
-        .json({ message: "The user found successfully", user: result });
+        .json({ message: "The user found successfully", user: result,status:200 });
     }
   });
 });
@@ -176,14 +177,20 @@ app.post("/login", (req, res) => {
   user.phone_no = user.phone_no?.trim();
   User.findOne(user, (err, result) => {
     if (err) {
-      res.status(400).json({ error: "Database connection failure" });
+      res
+        .status(400)
+        .json({ error: "Database connection failure", status: 400 });
     } else if (result == null) {
-      res.status(401).json({ error: "Invalid User Credentials" ,status:401});
+      res.status(401).json({ error: "Invalid User Credentials", status: 401 });
     } else {
       // const token = jwt.sign(result, "Laundri");
       res
         .status(200)
-        .json({ message: "User logged in successfully", user: result, status:200});
+        .json({
+          message: "User logged in successfully",
+          user: result,
+          status: 200,
+        });
     }
   });
 });
@@ -193,22 +200,27 @@ app.post("/register", (req, res) => {
   User.findOne({ phone_no: info.phone_no }, (err, result) => {
     if (err) {
       console.error(err);
-      res.status(503).json({ error: "Database Connection issue" });
+      res.status(503).json({ error: "Database Connection issue", status: 503 });
     } else if (result == null) {
       User.create(info, (error, newResult) => {
         if (error) {
           console.log(error);
-          res.status(400).json({
+          res.status(404).json({
             error: "Unable to create user with the defined information",
+            status: 404,
           });
         } else {
           res
             .status(201)
-            .json({ message: "User Created successfullly", info: newResult });
+            .json({
+              message: "User Created successfullly",
+              info: newResult,
+              status: 201,
+            });
         }
       });
     } else {
-      res.status(401).json({ message: "The user already exists" });
+      res.status(401).json({ message: "The user already exists", status: 401 });
     }
   });
 });
@@ -217,7 +229,9 @@ app.post("/addSlot", (req, res) => {
   const slot = req.body;
   Slot.create(slot, (err, result) => {
     if (err) {
-      res.status(400).json({ error: "The Slot cannot be created" });
+      res
+        .status(400)
+        .json({ error: "The Slot cannot be created", status: 400 });
     } else {
       res.redirect("/slot");
     }
@@ -230,17 +244,24 @@ app.post("/bookSlot/slot_id=:slot_id&user_id=:user_id", (req, res) => {
 
   Slot.findOne({ user_ids: { $in: user_id } }, (err, result) => {
     if (err) {
-      res.status(400).json({ error: "Database connection failure" });
+      res
+        .status(400)
+        .json({ error: "Database connection failure", status: 400 });
     } else if (result == null) {
       Slot.findById(slot_id, (er, info) => {
         if (er) {
-          res.status(400).json({ error: "Database connection failure" });
+          res
+            .status(400)
+            .json({ error: "Database connection failure", status: 400 });
         } else {
           //Checking if the slot is already full
           if (info.capacity == info.user_ids?.length) {
             res
               .status(200)
-              .json({ message: "The slot has already reached its limit" });
+              .json({
+                message: "The slot has already reached its limit",
+                status: 200,
+              });
           }
           //If available then book
           else {
@@ -249,9 +270,10 @@ app.post("/bookSlot/slot_id=:slot_id&user_id=:user_id", (req, res) => {
               { $addToSet: { user_ids: user_id } },
               (error, oldResult) => {
                 if (error) {
-                  res.status(400).json({
+                  res.status(404).json({
                     error:
                       "The slot couldn't be booked; Please try again later",
+                    status: 404,
                   });
                 } else {
                   Slot.findById(slot_id, (prob, updatedResult) => {
@@ -259,9 +281,13 @@ app.post("/bookSlot/slot_id=:slot_id&user_id=:user_id", (req, res) => {
                       res.status(200).json({
                         message: "Slot Booked Successfully",
                         slot: updatedResult,
+                        status: 200,
                       });
                     } else {
                       console.error(prob);
+                      res
+                        .status(404)
+                        .json({ message: "Error 404", status: 404 });
                     }
                   });
                 }
@@ -283,11 +309,9 @@ app.post("/placeOrder", (req, res) => {
   Order.create(order, (err, result) => {
     if (err) {
       console.error(err);
-      res.status(400).json({ error: "Missing Values" });
-    } else if (result == null) {
-      res.status(200).json({ message: "Failed to place order" });
+      res.status(404).json({ error: "Missing Values",status:404});
     } else {
-      res.status(201).json({ message: "Order Placed Successfully" });
+      res.status(201).json({ message: "Order Placed Successfully",status:201 });
     }
   });
 });
@@ -297,11 +321,11 @@ app.post("/orderFullfilled/order_id=:order_id", (req, res) => {
   const order_id = req.params.order_id;
   Order.findByIdAndUpdate(order_id, { status: 1 }, (err, result) => {
     if (err) {
-      res.status(400).json({ error: "Database connection failure" });
+      res.status(404).json({ error: "Database connection failure",status:404 });
     } else if (result == null) {
-      res.status(401).json({ message: "No such order exist" });
+      res.status(401).json({ message: "No such order exist",status:401});
     } else {
-      res.status(200).json({ message: "Order Updated" });
+      res.status(200).json({ message: "Order Updated",status:200 });
     }
   });
 });
