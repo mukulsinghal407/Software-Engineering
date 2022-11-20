@@ -170,6 +170,7 @@ app.get("/userDetails/user_id=:user_id", (req, res) => {
 
 app.post("/login", (req, res) => {
   const user = req.body;
+  console.log(user);
   user.password = user.password.trim();
   user.phone_no = user.phone_no.trim();
   User.findOne(user, (err, result) => {
