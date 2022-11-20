@@ -178,12 +178,12 @@ app.post("/login", (req, res) => {
     if (err) {
       res.status(400).json({ error: "Database connection failure" });
     } else if (result == null) {
-      res.status(401).json({ error: "Invalid User Credentials" });
+      res.status(401).json({ error: "Invalid User Credentials" ,status:401});
     } else {
       // const token = jwt.sign(result, "Laundri");
       res
         .status(200)
-        .json({ message: "User logged in successfully", user: result });
+        .json({ message: "User logged in successfully", user: result, status:200});
     }
   });
 });
