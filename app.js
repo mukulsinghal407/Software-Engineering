@@ -172,7 +172,6 @@ app.get("/userDetails/user_id=:user_id", (req, res) => {
 
 app.post("/login", (req, res) => {
   const user = req.body;
-  console.log(user);
   user.password = user.password?.trim();
   user.phone_no = user.phone_no?.trim();
   User.findOne(user, (err, result) => {
@@ -184,13 +183,23 @@ app.post("/login", (req, res) => {
       res.status(401).json({ error: "Invalid User Credentials", status: 401 });
     } else {
       // const token = jwt.sign(result, "Laundri");
-      res
-        .status(200)
-        .json({
-          message: "User logged in successfully",
-          user: result,
-          status: 200,
-        });
+      Order.find({ user_id: result._id }, (prob, orders) => {
+        if (prob) {
+          res.status(503).json({error:"Internal Server Error",status:503})
+        }else {
+          res
+          .status(200)
+          .json({
+            message: "User logged in successfully",
+            user: result,
+            status: 200,
+            orders
+          });
+          // res
+          //   .status(200)
+          //   .json({ message: "History of the orders", results: result,status:200 });
+        }
+      });
     }
   });
 });
