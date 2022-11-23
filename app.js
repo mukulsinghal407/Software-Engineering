@@ -292,24 +292,13 @@ app.post("/bookSlot/slot_id=:slot_id&user_id=:user_id", (req, res) => {
               (error, oldResult) => {
                 if (error) {
                   res.status(404).json({
-                    error:
-                      "The slot couldn't be booked; Please try again later",
+                    error:"The slot couldn't be booked; Please try again later",
                     status: 404,
                   });
                 } else {
-                  Slot.findById(slot_id, (prob, updatedResult) => {
-                    if (!prob) {
-                      res.status(200).json({
-                        message: "Slot Booked Successfully",
-                        slot: updatedResult,
-                        status: 200,
-                      });
-                    } else {
-                      console.error(prob);
-                      res
-                        .status(404)
-                        .json({ message: "Error 404", status: 404 });
-                    }
+                  res.status(200).json({
+                    message: "Slot Booked Successfully",
+                    status: 200,
                   });
                 }
               }
