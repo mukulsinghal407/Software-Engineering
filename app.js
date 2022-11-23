@@ -266,14 +266,14 @@ app.post("/bookSlot/slot_id=:slot_id&user_id=:user_id", (req, res) => {
   Slot.findOne({ user_ids: { $in: user_id } }, (err, result) => {
     if (err) {
       res
-        .status(400)
-        .json({ error: "Database connection failure", status: 400 });
+        .status(404)
+        .json({ error: "Database connection failure", status: 404 });
     } else if (result == null) {
       Slot.findById(slot_id, (er, info) => {
         if (er) {
           res
-            .status(400)
-            .json({ error: "Database connection failure", status: 400 });
+            .status(404)
+            .json({ error: "Database connection failure", status: 404 });
         } else {
           //Checking if the slot is already full
           if (info.capacity == info.user_ids?.length) {
@@ -307,7 +307,7 @@ app.post("/bookSlot/slot_id=:slot_id&user_id=:user_id", (req, res) => {
         }
       });
     } else {
-      res.status(406).json({ message: "The user has already booked a slot." });
+      res.status(406).json({ message: "The user has already booked a slot." ,status:406});
     }
   });
 });
