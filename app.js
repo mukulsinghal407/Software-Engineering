@@ -279,18 +279,18 @@ app.post("/register", (req, res) => {
   }
 });
 
-app.post("/addSlot", (req, res) => {
-  const slot = req.body;
-  Slot.create(slot, (err, result) => {
-    if (err) {
-      res
-        .status(400)
-        .json({ error: "The Slot cannot be created", status: 400 });
-    } else {
-      res.redirect("/slot");
-    }
-  });
-});
+// app.post("/addSlot", (req, res) => {
+//   const slot = req.body;
+//   Slot.create(slot, (err, result) => {
+//     if (err) {
+//       res
+//         .status(400)
+//         .json({ error: "The Slot cannot be created", status: 400 });
+//     } else {
+//       res.redirect("/slot");
+//     }
+//   });
+// });
 
 app.post("/bookSlot/slot_id=:slot_id&user_id=:user_id", (req, res) => {
   const slot_id = req.params.slot_id;
@@ -348,15 +348,25 @@ app.post("/bookSlot/slot_id=:slot_id&user_id=:user_id", (req, res) => {
 //give clothes order placed
 app.post("/placeOrder", (req, res) => {
   const order = req.body;
-  console.log(order);
-  Order.create(order, (err, result) => {
-    if (err) {
-      console.error(err);
-      res.status(404).json({ error: "Missing Values",status:404});
-    } else {
-      res.status(201).json({ message: "Order Placed Successfully",status:201 });
-    }
+  let num=0;
+  let negative = 0;
+  order.clothes.forEach(e=>{
+    if(!negative)
+      num+=e.quantity
+    if(e.quantity<0) negative=1;
   });
+  if(num>10 || num<0 || negative){
+    res.status(404).json({error:"The number of clothes is invalid",status:404})
+  }else{
+    Order.create(order, (err, result) => {
+      if (err) {
+        console.error(err);
+        res.status(404).json({ error: "Missing Values",status:404});
+      } else {
+        res.status(201).json({ message: "Order Placed Successfully",status:201 });
+      }
+    });
+  }
 });
 
 //take clothes order taken
