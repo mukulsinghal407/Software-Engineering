@@ -80,6 +80,10 @@ const Slot = mongoose.model("slot", slot);
 const app = express();
 app.use(bodyParser.json());
 
+function containsAnyLetters(str) {
+  return /[a-zA-Z]/.test(str);
+}
+
 //GET Requests
 app.get("/", (req, res) => {
   res.status(200).json({ message: "Welcome to Laundri API zombie endpoint" });
@@ -218,11 +222,25 @@ app.post("/login", (req, res) => {
 
 app.post("/register", (req, res) => {
   const info = req.body;
-  console.log(info.phone_no.length!==10 && info.roll_no.length!==10)
-  if ((info.role!=="0" && info.role!=="1" && info.role!=="2") && info.phone_no.length!==10 && info.roll_no.length!==10 && info.password.length!==10){
-    res.status(404).json({error:"Invalid Role or Phone number",status:404});
+
+  const name = info.name;
+  const roll_no = info.roll_no;
+  const password = info.password;
+  const phone_no = info.phone_no;
+  const role = info.role;
+
+  if(containsAnyLetters(roll_no) || containsAnyLetters(phone_no) || roll_no.length!==10 || phone_no.length!==10 || password.length!==10){
+    res.status(404).json({error:"Invalid Credentials", status:404});
+  }else if (role!=="0" || role!=="1" || role!=="2"){
+    res.status(404).json({error:"Invalid Credentials",status:404});
   }else{
-    User.findOne({ phone_no: info.phone_no }, (err, result) => {
+    info.name = name;
+    info.roll_no = roll_no;
+    info.password = password;
+    info.phone_no = phone_no;
+    info.role = role;
+
+    User.findOne({ phone_no:info.phone_no }, (err, result) => {
       if (err) {
         console.error(err);
         res.status(503).json({ error: "Database Connection issue", status: 503 });
