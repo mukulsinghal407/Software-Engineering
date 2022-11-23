@@ -363,7 +363,7 @@ app.post("/placeOrder", (req, res) => {
         console.error(err);
         res.status(404).json({ error: "Missing Values",status:404});
       } else {
-        res.status(201).json({ message: "Order Placed Successfully",status:201 });
+        res.status(201).json({ message: "Order Placed Successfully",status:201,order_id:result._id });
       }
     });
   }
