@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
+const ejs = require('ejs');
 
 // const jwt = require("jsonwebtoken");
 
@@ -79,6 +80,9 @@ const Slot = mongoose.model("slot", slot);
 
 const app = express();
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static(__dirname + '/public'));
+app.set("view engine", "ejs");
 
 function containsAnyLetters(str) {
   let first = /[a-zA-Z]/.test(str);
@@ -134,7 +138,7 @@ app.get("/orderHistory/user_id=:user_id", (req, res) => {
 
 app.get("/orderDetails/user_id=:user_id", (req, res) => {
   const user_id = req.params.user_id;
-  Order.find({ user_id }, (err, result) => {
+  Order.find({ user_id,status:0 }, (err, result) => {
     if (err) {
       res.status(404).json({ error: "The order was not found",status:404 });
     } else if (result?.length === 0) {
@@ -180,6 +184,17 @@ app.get("/userDetails/phone_no=:phone_no", (req, res) => {
     }
   });
 });
+
+app.get('/acceptClothes/student_id=:user_id&json=:json',(req,res)=>{
+  const user_id = req.params.user_id;
+  const clothes = JSON.parse(req.params.json);
+
+  if(user_id.length!==24){
+    res.status(404).json({error:"Invalid User Id",status:404});
+  }else{
+        res.render('accept.ejs',{user_id,json:clothes});
+  }
+})
 // app.get("/getSlotDetails/slot_id=:slot_id", (req, res) => {
 //     const slot_id = req.params.slot_id;
 //     Slot.findById(slot_id,(err,result)=>{
@@ -352,7 +367,7 @@ app.post("/placeOrder", (req, res) => {
   const order = req.body;
   let num=0;
   let negative = 0;
-  order.clothes.forEach(e=>{
+  order.clothes?.forEach(e=>{
     if(!negative)
       num+=e.quantity
     if(e.quantity<0) negative=1;
