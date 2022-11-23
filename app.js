@@ -157,6 +157,23 @@ app.get("/userDetails/user_id=:user_id", (req, res) => {
   });
 });
 
+app.get("/userDetails/phone_no=:phone_no", (req, res) => {
+  const user_id = req.params.phone_no;
+  User.findOne({phone_no:user_id}, (err, result) => {
+    if (err) {
+      res.status(404).json({ error: "Database connection issue",status:404 });
+    } else if (result == null) {
+      res.status(401).json({
+        message: "The user with the defined credentials wasn't found",
+        status:401
+      });
+    } else {
+      res
+        .status(200)
+        .json({ message: "The user found successfully", user: result,status:200 });
+    }
+  });
+});
 // app.get("/getSlotDetails/slot_id=:slot_id", (req, res) => {
 //     const slot_id = req.params.slot_id;
 //     Slot.findById(slot_id,(err,result)=>{
