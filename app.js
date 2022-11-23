@@ -218,8 +218,8 @@ app.post("/login", (req, res) => {
 
 app.post("/register", (req, res) => {
   const info = req.body;
-  if (info.role!=="0" || info.role!=="1" || info.role!=="2"){
-    res.status(404).json({error:"Role should be an integer either 0,1,2"});
+  if ((info.role!=="0" && info.role!=="1" && info.role!=="2") && info.phone_no.length!==10){
+    res.status(404).json({error:"Invalid Role or Phone number"});
   }else{
     User.findOne({ phone_no: info.phone_no }, (err, result) => {
       if (err) {
