@@ -81,7 +81,9 @@ const app = express();
 app.use(bodyParser.json());
 
 function containsAnyLetters(str) {
-  return /[a-zA-Z]/.test(str);
+  let first = /[a-zA-Z]/.test(str);
+  let second = /[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/.test(str);
+  return first || second;
 }
 
 function containsAnySpaces(str){
@@ -228,11 +230,11 @@ app.post("/login", (req, res) => {
 app.post("/register", (req, res) => {
   const info = req.body;
 
-  const name = info.name.trim();
-  const roll_no = info.roll_no.trim();
-  const password = info.password.trim();
-  const phone_no = info.phone_no.trim();
-  const role = parseInt(info.role.trim());
+  const name = info.name?.trim();
+  const roll_no = info.roll_no?.trim();
+  const password = info.password?.trim();
+  const phone_no = info.phone_no?.trim();
+  const role = parseInt(info.role?.trim());
 
   if(containsAnyLetters(roll_no) || containsAnyLetters(phone_no) || roll_no.length!==9 || phone_no.length!==10 || password.length!==10){
     res.status(404).json({error:"Invalid Credentials", status:404});
