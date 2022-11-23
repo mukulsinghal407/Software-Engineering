@@ -84,6 +84,11 @@ function containsAnyLetters(str) {
   return /[a-zA-Z]/.test(str);
 }
 
+function containsAnySpaces(str){
+  const myArray = str.split(" ");
+  return myArray.length>0;
+}
+
 //GET Requests
 app.get("/", (req, res) => {
   res.status(200).json({ message: "Welcome to Laundri API zombie endpoint" });
@@ -223,15 +228,17 @@ app.post("/login", (req, res) => {
 app.post("/register", (req, res) => {
   const info = req.body;
 
-  const name = info.name;
-  const roll_no = info.roll_no;
-  const password = info.password;
-  const phone_no = info.phone_no;
-  const role = info.role;
+  const name = info.name.trim();
+  const roll_no = info.roll_no.trim();
+  const password = info.password.trim();
+  const phone_no = info.phone_no.trim();
+  const role = parseInt(info.role.trim());
 
   if(containsAnyLetters(roll_no) || containsAnyLetters(phone_no) || roll_no.length!==9 || phone_no.length!==10 || password.length!==10){
     res.status(404).json({error:"Invalid Credentials", status:404});
-  }else if (role!=="0" || role!=="1" || role!=="2"){
+  }else if (role>2 && role<0){
+    res.status(404).json({error:"Invalid Credentials",status:404});
+  }else if(containsAnySpaces(password) || containsAnySpaces(roll_no) || containsAnySpaces(phone_no) ){
     res.status(404).json({error:"Invalid Credentials",status:404});
   }else{
     info.name = name;
@@ -239,33 +246,36 @@ app.post("/register", (req, res) => {
     info.password = password;
     info.phone_no = phone_no;
     info.role = role;
-
-    User.findOne({ phone_no:info.phone_no }, (err, result) => {
-      if (err) {
-        console.error(err);
-        res.status(503).json({ error: "Database Connection issue", status: 503 });
-      } else if (result == null) {
-        User.create(info, (error, newResult) => {
-          if (error) {
-            console.log(error);
-            res.status(404).json({
-              error: "Unable to create user with the defined information",
-              status: 404,
-            });
-          } else {
-            res
-              .status(201)
-              .json({
-                message: "User Created successfullly",
-                info: newResult,
-                status: 201,
+    if(role === 0 || role === 1 || role ===2){
+      User.findOne({ phone_no:info.phone_no }, (err, result) => {
+        if (err) {
+          console.error(err);
+          res.status(503).json({ error: "Database Connection issue", status: 503 });
+        } else if (result == null) {
+          User.create(info, (error, newResult) => {
+            if (error) {
+              console.log(error);
+              res.status(404).json({
+                error: "Unable to create user with the defined information",
+                status: 404,
               });
-          }
-        });
-      } else {
-        res.status(401).json({ message: "The user already exists", status: 401 });
-      }
-    });
+            } else {
+              res
+                .status(201)
+                .json({
+                  message: "User Created successfullly",
+                  info: newResult,
+                  status: 201,
+                });
+            }
+          });
+        } else {
+          res.status(401).json({ message: "The user already exists", status: 401 });
+        }
+      });
+    }else{
+      res.status(404).json({error:"Invalid role detected", status:404});
+    }
   }
 });
 
