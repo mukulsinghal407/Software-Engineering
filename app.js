@@ -229,7 +229,7 @@ app.post("/register", (req, res) => {
   const phone_no = info.phone_no;
   const role = info.role;
 
-  if(containsAnyLetters(roll_no) || containsAnyLetters(phone_no) || roll_no.length!==10 || phone_no.length!==10 || password.length!==10){
+  if(containsAnyLetters(roll_no) || containsAnyLetters(phone_no) || roll_no.length!==9 || phone_no.length!==10 || password.length!==10){
     res.status(404).json({error:"Invalid Credentials", status:404});
   }else if (role!=="0" || role!=="1" || role!=="2"){
     res.status(404).json({error:"Invalid Credentials",status:404});
