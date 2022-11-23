@@ -62,11 +62,7 @@ const order = mongoose.Schema({
 });
 const slot = mongoose.Schema({
   start_time: {
-    type: Date,
-    required: true,
-  },
-  end_time: {
-    type: Date,
+    type: String,
     required: true,
   },
   capacity: {
@@ -100,7 +96,6 @@ app.get("/slot", (req, res) => {
           temp.push(element);
         }
       });
-      console.log(result);
       temp.length === 0
         ? res
             .status(200)
