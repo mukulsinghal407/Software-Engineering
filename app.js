@@ -218,32 +218,36 @@ app.post("/login", (req, res) => {
 
 app.post("/register", (req, res) => {
   const info = req.body;
-  User.findOne({ phone_no: info.phone_no }, (err, result) => {
-    if (err) {
-      console.error(err);
-      res.status(503).json({ error: "Database Connection issue", status: 503 });
-    } else if (result == null) {
-      User.create(info, (error, newResult) => {
-        if (error) {
-          console.log(error);
-          res.status(404).json({
-            error: "Unable to create user with the defined information",
-            status: 404,
-          });
-        } else {
-          res
-            .status(201)
-            .json({
-              message: "User Created successfullly",
-              info: newResult,
-              status: 201,
+  if (info.role!=="0" || info.role!=="1" || info.role!=="2"){
+    res.status(404).json({error:"Role should be an integer either 0,1,2"});
+  }else{
+    User.findOne({ phone_no: info.phone_no }, (err, result) => {
+      if (err) {
+        console.error(err);
+        res.status(503).json({ error: "Database Connection issue", status: 503 });
+      } else if (result == null) {
+        User.create(info, (error, newResult) => {
+          if (error) {
+            console.log(error);
+            res.status(404).json({
+              error: "Unable to create user with the defined information",
+              status: 404,
             });
-        }
-      });
-    } else {
-      res.status(401).json({ message: "The user already exists", status: 401 });
-    }
-  });
+          } else {
+            res
+              .status(201)
+              .json({
+                message: "User Created successfullly",
+                info: newResult,
+                status: 201,
+              });
+          }
+        });
+      } else {
+        res.status(401).json({ message: "The user already exists", status: 401 });
+      }
+    });
+  }
 });
 
 app.post("/addSlot", (req, res) => {
