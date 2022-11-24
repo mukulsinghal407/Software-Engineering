@@ -195,6 +195,25 @@ app.get('/acceptClothes/student_id=:user_id&json=:json',(req,res)=>{
         res.render('accept.ejs',{user_id,json:clothes});
   }
 })
+
+app.get('/giveClothes/user_id=:user_id',(req,res)=>{
+  const user_id = req.params.user_id;
+  if(user_id.length!==24){
+    res.status(404).json({error:"Invalid User Id",status:404});
+  }else{
+    Order.find({user_id:user_id,status:0},(err,result)=>{
+      if(err){
+        res.status(404).json({error:"Database connection faliure"});
+      }else if(result.length===0){
+        res.render('give',{flag:1})
+      }else{
+        console.log(result);
+        res.render('give',{flag:0,user_id,order_id:result[0]._id})
+      }
+    });
+  }
+})
+
 // app.get("/getSlotDetails/slot_id=:slot_id", (req, res) => {
 //     const slot_id = req.params.slot_id;
 //     Slot.findById(slot_id,(err,result)=>{
@@ -252,11 +271,11 @@ app.post("/register", (req, res) => {
   const role = parseInt(info.role?.trim());
 
   if(containsAnyLetters(roll_no) || containsAnyLetters(phone_no) || roll_no.length!==9 || phone_no.length!==10 || password.length!==10){
-    res.status(404).json({error:"Invalid Credentials", status:404});
+    res.status(404).json({error:"Invalid Credentials pass", status:404});
   }else if (role>2 && role<0){
-    res.status(404).json({error:"Invalid Credentials",status:404});
+    res.status(404).json({error:"Invalid Credentials role",status:404});
   }else if(containsAnySpaces(password) || containsAnySpaces(roll_no) || containsAnySpaces(phone_no) ){
-    res.status(404).json({error:"Invalid Credentials",status:404});
+    res.status(404).json({error:"Invalid Credentials pass psace",status:404});
   }else{
     info.name = name;
     info.roll_no = roll_no;
