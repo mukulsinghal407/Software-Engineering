@@ -364,6 +364,7 @@ app.post("/bookSlot/slot_id=:slot_id&user_id=:user_id", (req, res) => {
 
 //give clothes order placed
 app.post("/placeOrder", (req, res) => {
+  console.log(req.body);
   const order = req.body;
   let num=0;
   let negative = 0;
@@ -375,7 +376,19 @@ app.post("/placeOrder", (req, res) => {
   if(num>10 || num<0 || negative){
     res.status(404).json({error:"The number of clothes is invalid",status:404})
   }else{
-    Order.create(order, (err, result) => {
+    const finalOrder = {
+      user_id:order.user_id,
+      clothes:[{
+        name:"Shirt",
+        quantity:parseInt(order.shirt)
+      },{
+        name:"Pant",
+        quantity:parseInt(order.pant)
+      },],
+      status:0
+    };
+
+    Order.create(finalOrder, (err, result) => {
       if (err) {
         console.error(err);
         res.status(404).json({ error: "Missing Values",status:404});

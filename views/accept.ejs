@@ -9,44 +9,51 @@
     <title>Accept Order</title>
 </head>
 <style>
+    body{
+        background-color: #8fcce7;
+    }
+    form{
+        border: black 3px dashed;
+    }
     h1{
         text-align: center;
     }
 </style>
 <body>
     <h1 class="mt-5">ACCEPT ORDER</h1>
-    <div style="display: flex; justify-content:center; align-items:center; height: 80vh;">
-        <form action="/placeOrder" method="post">
-            <div class="row">
+    <div style="margin:0 auto;" class="m-5">
+        <form action="/placeOrder" method="POST" class="p-5" >
+            <div class="row m-2">
                 <div class="col">
                     <label>User ID: </label>
                 </div>
                 <div class="col">
-                    <input type="text" disabled class="form-control" name="user_id" value="<%=user_id%>">
+                    <input type="text" name="user_id" class="form-control" value="<%=user_id%>">
                 </div>
             </div>
-            <div class="row">
+            <div class="row m-2">
                 <div class="col">
                     <label>Shirts: </label>
                 </div>
                 <div class="col">
-                    <input type="text" disabled class="form-control" name="shirt" value="<%=json.shirt%>">
+                    <input type="text" class="form-control" name="shirt" value="<%=json.shirt%>">
                 </div>
             </div>
-            <div class="row">
+            <div class="row m-2">
                 <div class="col">
                     <label>Pants: </label>
                 </div>
                 <div class="col">
-                    <input type="text" disabled class="form-control" name="pant" value="<%=json.pants%>">
+                    <input type="text" class="form-control" name="pant" value="<%=json.pants%>">
                 </div>
             </div>
-            <div class="row">
-                <div class="col">
-                    <button type="reset" class="btn btn-danger">Reject</button>
+            <div class="row m-2 mt-5">
+                <div class="col" style="text-align: center">
+                    <button type="reset" class="btn btn-danger btn-lg">Reject</button>
                 </div>
-                <div class="col">
-                    <button type="submit" class="btn btn-success">Accept</button>
+                <div class="col" style="text-align: center">
+                    <button type="submit" class="btn btn-success btn-lg">Accept</button>
+                </div>
             </div>
         </form>
     </div>
