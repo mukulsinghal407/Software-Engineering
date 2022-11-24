@@ -28,7 +28,8 @@
                     <label>User ID: </label>
                 </div>
                 <div class="col">
-                    <input type="text" name="user_id" class="form-control" value="<%=user_id%>">
+                    <%=user_id%>
+                    <input type="hidden" name="user_id" class="form-control" value="<%=user_id%>">
                 </div>
             </div>
             <div class="row m-2">
@@ -36,7 +37,8 @@
                     <label>Shirts: </label>
                 </div>
                 <div class="col">
-                    <input type="text" class="form-control" name="shirt" value="<%=json.shirt%>">
+                    <%=json.shirt %> 
+                    <input type="hidden" class="form-control" name="shirt" value="<%=json.shirt%>">
                 </div>
             </div>
             <div class="row m-2">
@@ -44,7 +46,8 @@
                     <label>Pants: </label>
                 </div>
                 <div class="col">
-                    <input type="text" class="form-control" name="pant" value="<%=json.pants%>">
+                    <%=json.pants %> 
+                    <input type="hidden" class="form-control" name="pant" value="<%=json.pants%>">
                 </div>
             </div>
             <div class="row m-2 mt-5">
