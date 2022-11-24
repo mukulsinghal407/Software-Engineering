@@ -274,8 +274,6 @@ app.post("/register", (req, res) => {
     res.status(404).json({error:"Invalid Credentials pass", status:404});
   }else if (role>2 && role<0){
     res.status(404).json({error:"Invalid Credentials role",status:404});
-  }else if(containsAnySpaces(password) || containsAnySpaces(roll_no) || containsAnySpaces(phone_no) ){
-    res.status(404).json({error:"Invalid Credentials pass psace",status:404});
   }else{
     info.name = name;
     info.roll_no = roll_no;
