@@ -90,10 +90,10 @@ function containsAnyLetters(str) {
   return first || second;
 }
 
-function containsAnySpaces(str){
-  const myArray = str.split(" ");
-  return myArray.length>0;
-}
+// function containsAnySpaces(str){
+//   const myArray = str.split(" ");
+//   return myArray.length>0;
+// }
 
 //GET Requests
 app.get("/", (req, res) => {

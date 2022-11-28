@@ -12,9 +12,6 @@
     body{
         background-color: #8fcce7;
     }
-    form{
-        border: black 3px dashed;
-    }
     h1{
         text-align: center;
     }
@@ -41,12 +38,10 @@
   </thead>
   <tbody>
             <tr>
-                <%=order_id%>
-            </tr>
-            <tr>
-                <form action="/orderFullfilled/order_id=<%=order_id%>" method="post">
-                    <button type="submit" name="temp" value="<%=order_id%>">Given</button>
-                </form>
+                <td><%=order_id%></td>
+                <td><form action="/orderFullfilled/order_id=<%=order_id%>" method="post">
+                    <button type="submit" class="btn btn-warning" name="temp" value="<%=order_id%>">Given</button>
+                </form></td>
             </tr>
   </tbody>
 </table>
